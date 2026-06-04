@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Bricolage Grotesque", Georgia, serif;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --hair: rgba(22, 20, 14, 0.12);
+  --hair-strong: rgba(22, 20, 14, 0.22);
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+
+body {
+  background-color: #f4f1ea;
+  color: #16140e;
+}
+
+::selection {
+  background: #2440ff;
+  color: #f4f1ea;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #ece9df;
+}
+::-webkit-scrollbar-thumb {
+  background: #c7c3b6;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2440ff;
+}
+
+@layer components {
+  .shell {
+    @apply mx-auto w-full max-w-shell px-5 sm:px-8 lg:px-12;
+  }
+
+  /* monospace section label, e.g. "002 / SELECTED WORK" */
+  .mono-label {
+    @apply font-mono text-[11px] uppercase tracking-mono text-faint;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 border border-ink/80 px-6 py-3
+           font-mono text-[12px] uppercase tracking-wide2 transition-all duration-300;
+  }
+  .btn-fill {
+    @apply bg-ink text-paper hover:bg-accent hover:border-accent;
+  }
+  .btn-line {
+    @apply text-ink hover:bg-ink hover:text-paper;
+  }
+
+  .hair {
+    @apply h-px w-full bg-[color:var(--hair)];
+  }
+
+  .tag {
+    @apply inline-flex items-center border border-ink/15 bg-paper px-2.5 py-1
+           font-mono text-[10.5px] uppercase tracking-wide2 text-ink-soft;
+  }
+}
+
+/* subtle paper grain */
+.grain::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* scroll reveal */
+.reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* marquee */
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 32s linear infinite;
+}
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8%,
+    #000 92%,
+    transparent
+  );
+}
+
+img {
+  user-select: none;
+}
