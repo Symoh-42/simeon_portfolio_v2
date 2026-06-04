@@ -156,7 +156,7 @@ export default function HomePage() {
             <Reveal delay={140}>
               <div className="mt-10 grid gap-8 sm:grid-cols-2">
                 <p className="font-sans text-[14px] leading-relaxed text-ink-soft">
-                  Over 3+ years I&rsquo;ve shipped 25+ projects end-to-end,
+                  Over 5+ years I&rsquo;ve shipped 25+ projects end-to-end,
                   working across cross-functional teams, integrating third-party
                   APIs like M-PESA, and keeping applications responsive and
                   high-performing.
