@@ -3,7 +3,7 @@ import Reveal from "@/components/Reveal";
 import ProjectCard from "@/components/ProjectCard";
 import {
   profile,
-  projects,
+  getProjects,
   services,
   skillGroups,
   experience,
@@ -11,9 +11,9 @@ import {
   techMarquee,
 } from "@/data/portfolio";
 
-const featured = projects.filter((p) => p.featured);
-
-export default function HomePage() {
+export default async function HomePage() {
+  const projects = await getProjects();
+  const featured = projects.filter((p) => p.featured);
   return (
     <>
       {/* ─────────────────────────── HERO ─────────────────────────── */}

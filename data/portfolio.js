@@ -13,7 +13,7 @@ export const profile = {
     "System Architecture",
   ],
   tagline:
-    "Innovative software engineer with 3+ years building scalable, user-friendly web and mobile applications with React.js, Next.js, Django and React Native.",
+    "Innovative software engineer with 5+ years building scalable, user-friendly web and mobile applications with React.js, Next.js, Django and React Native.",
   location: "Nairobi, Kenya",
   email: "msimeon937@gmail.com",
   phone: "+254 704 662 432",
@@ -22,7 +22,7 @@ export const profile = {
   cv: "/Simeon_Mwangi_CV.pdf",
   available: true,
   stats: [
-    { k: "3+", label: "Years experience" },
+    { k: "5+", label: "Years experience" },
     { k: "25+", label: "Projects shipped" },
     { k: "10+", label: "Industries served" },
     { k: "2", label: "Companies / brands" },
@@ -33,7 +33,46 @@ export const profile = {
 export const shot = (url, w = 1200, h = 820) =>
   `https://s.wordpress.com/mshots/v1/${encodeURIComponent(url)}?w=${w}&h=${h}`;
 
-export const projects = [
+// Projects now live in the Ohmspace Technologies marketing backend
+// (proposed_projects/ohmspace-site/backend, `portfolio` app) so new sites
+// can be added from Django Admin instead of editing this file. The array
+// below is kept only as an offline/dev fallback if that API is unreachable.
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8020/api/v1";
+
+function fromApi(row) {
+  return {
+    id: row.slug,
+    title: row.title,
+    url: row.url,
+    category: row.category,
+    company: row.company,
+    blurb: row.blurb,
+    tags: row.tags ?? [],
+    featured: row.is_featured,
+  };
+}
+
+export async function getProjects() {
+  try {
+    const res = await fetch(`${API_BASE}/portfolio-projects/`, {
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) throw new Error(`portfolio-projects fetch failed: ${res.status}`);
+    const json = await res.json();
+    const rows = Array.isArray(json.data) ? json.data : [];
+    if (rows.length === 0) throw new Error("portfolio-projects returned no rows");
+    return rows.map(fromApi);
+  } catch (err) {
+    console.error("[portfolio] falling back to static project list —", err.message);
+    return fallbackProjects;
+  }
+}
+
+export function getCategories(list) {
+  return ["All", ...Array.from(new Set(list.map((p) => p.category))).sort()];
+}
+
+const fallbackProjects = [
   // ───────── Greenbear Technologies ─────────
   {
     id: "rentalpay",
@@ -205,9 +244,29 @@ export const projects = [
     featured: false,
   },
   {
+    id: "axion",
+    title: "Axion Biz Solution",
+    url: "https://axionbizsolution.com/",
+    category: "Corporate",
+    company: "Ohmspace",
+    blurb: "Business solutions company website — services, expertise and client enquiries.",
+    tags: ["Next.js", "Tailwind CSS"],
+    featured: false,
+  },
+  {
+    id: "ohmspace",
+    title: "Ohmspace Technologies",
+    url: "https://ohmspace.co.ke/",
+    category: "Corporate",
+    company: "Ohmspace",
+    blurb: "Company site for Ohmspace Technologies — web, mobile and digital marketing services.",
+    tags: ["Next.js", "Tailwind CSS"],
+    featured: false,
+  },
+  {
     id: "pamoja",
     title: "Pamoja Flowers",
-    url: "https://pamoja.vercel.app/",
+    url: "https://pamojaflowers.com/",
     category: "E-commerce",
     company: "Ohmspace",
     blurb: "Florist e-commerce — bouquets and gifting.",
@@ -296,11 +355,6 @@ export const projects = [
     tags: ["Next.js", "Tailwind CSS"],
     featured: false,
   },
-];
-
-export const categories = [
-  "All",
-  ...Array.from(new Set(projects.map((p) => p.category))).sort(),
 ];
 
 export const services = [
